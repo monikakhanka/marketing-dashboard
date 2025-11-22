@@ -1,31 +1,39 @@
-// PerformanceInsights.js
 import {
-  LineChart,
-  Line,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   Tooltip,
   CartesianGrid,
   ResponsiveContainer,
+  Legend,
 } from "recharts";
-import { useDataContext } from "./DataContext";
 
-export default function PerformanceInsights() {
-  const { filteredData } = useDataContext();
+export default function PerformanceInsights({ data }) {
+
+  const aggregatedData = data.reduce((acc, cur) => {
+    const existing = acc.find((item) => item.region === cur.region);
+    if (existing) {
+      existing.spend += cur.spend;
+    } else {
+      acc.push({ region: cur.region, spend: cur.spend });
+    }
+    return acc;
+  }, []);
 
   return (
     <div className="chart-container">
-      <h2>Performance Insights</h2>
+      <h2>Performance Insights (Spend by Region)</h2>
 
-      <ResponsiveContainer width="100%" height={320}>
-        <LineChart data={filteredData}>
+      <ResponsiveContainer width="100%" height={350}>
+        <BarChart data={aggregatedData} barCategoryGap="10%">
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="id" />
+          <XAxis dataKey="region" />
           <YAxis />
           <Tooltip />
-          <Line type="monotone" dataKey="spend" stroke="#8884d8" />
-          <Line type="monotone" dataKey="clicks" stroke="#82ca9d" />
-        </LineChart>
+          <Legend />
+          <Bar dataKey="spend" fill="#8884d8" barSize={50} />
+        </BarChart>
       </ResponsiveContainer>
     </div>
   );

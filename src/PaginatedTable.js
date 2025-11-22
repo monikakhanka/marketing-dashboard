@@ -14,7 +14,6 @@ export default function PaginatedTable({
   const [page, setPage] = useState(1);
   const pageSize = 10;
 
-  /** ---------------- REGIONS + CHANNELS ---------------- */
   const regions = useMemo(() => {
     return [...new Set(data.map((d) => d.region))];
   }, [data]);
@@ -29,8 +28,6 @@ export default function PaginatedTable({
     }
     return group;
   }, [data]);
-
-  /** ---------------- PAGINATION ---------------- */
   const totalPages = useMemo(
     () => Math.ceil(data.length / pageSize),
     [data.length]
@@ -41,15 +38,12 @@ export default function PaginatedTable({
     return data.slice(start, start + pageSize);
   }, [page, data]);
 
-  /** ---------------- SORT CLICK HANDLER ---------------- */
   const handleSort = useCallback(
     (column) => {
       setSortConfig((prev) => {
-        // toggle ascending <-> descending
         if (prev.column === column) {
           return { column, order: prev.order === "asc" ? "desc" : "asc" };
         }
-        // set new column
         return { column, order: "asc" };
       });
 
@@ -58,7 +52,6 @@ export default function PaginatedTable({
     [setSortConfig]
   );
 
-  /** ---------------- SORT ICON ---------------- */
   const getSortIcon = useCallback(
     (column) => {
       if (sortConfig.column !== column) return "⇅";
@@ -67,7 +60,6 @@ export default function PaginatedTable({
     [sortConfig]
   );
 
-  /** ---------------- PAGE HANDLERS ---------------- */
   const goToFirstPage = () => setPage(1);
   const goToLastPage = () => setPage(totalPages);
   const goToPrevPage = () => setPage((p) => Math.max(1, p - 1));
@@ -75,13 +67,12 @@ export default function PaginatedTable({
 
   return (
     <div className="dashboard-container">
-      {/* -------- FILTER PANEL -------- */}
       <FilterPanel
         regions={regions}
         channelsByRegion={channelsByRegion}
         selectedRegion={selectedRegion}
         setSelectedRegion={(region) => {
-          setSelectedChannel(null); // reset channel
+          setSelectedChannel(null);
           setSelectedRegion(region);
           setPage(1);
         }}
@@ -92,7 +83,6 @@ export default function PaginatedTable({
         }}
       />
 
-      {/* -------- TABLE -------- */}
       <div className="table-container">
         <h2>Marketing Data Table</h2>
 
@@ -143,7 +133,6 @@ export default function PaginatedTable({
           </tbody>
         </table>
 
-        {/* -------- PAGINATION -------- */}
         <div className="pagination">
           <button onClick={goToFirstPage} disabled={page === 1}>
             ⏮ First

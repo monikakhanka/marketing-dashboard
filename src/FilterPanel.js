@@ -12,7 +12,6 @@ export default function FilterPanel({
     <div className="filter-panel">
       <h3 className="filter-heading">Category</h3>
 
-      {/* Regions */}
       <div className="filter-section">
         <h4 className="filter-title">Regions</h4>
         <ul className="filter-list">
@@ -39,7 +38,6 @@ export default function FilterPanel({
         </ul>
       </div>
 
-      {/* Channels */}
       {selectedRegion && (
         <div className="filter-section">
           <h4 className="filter-title">Channels</h4>

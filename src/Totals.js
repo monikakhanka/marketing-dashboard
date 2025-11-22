@@ -1,9 +1,7 @@
-// Totals.js
 import React, { useMemo } from "react";
 import "./styles/Totals.css";
 
 export default function Totals({ data }) {
-  // Compute totals only when data changes
   const totals = useMemo(() => {
     const spend = data.reduce((sum, d) => sum + d.spend, 0);
     const conversions = data.reduce((sum, d) => sum + d.conversions, 0);

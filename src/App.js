@@ -1,13 +1,14 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, lazy, Suspense } from "react";
 import "./App.css";
 import PaginatedTable from "./PaginatedTable";
 import Totals from "./Totals";
 import data from "./data.json";
 
+const PerformanceInsights = lazy(() => import("./PerformanceInsights"));
+
 function App() {
   const [rawData] = useState(data);
 
-  // Lift filter + sorting state UP so Totals can access filtered data
   const [selectedRegion, setSelectedRegion] = useState(null);
   const [selectedChannel, setSelectedChannel] = useState(null);
   const [sortConfig, setSortConfig] = useState({
@@ -15,7 +16,8 @@ function App() {
     order: "asc",
   });
 
-  /** ---------------- FILTER + SORT IN APP ---------------- */
+  const [showChart, setShowChart] = useState(false);
+
   const filteredData = useMemo(() => {
     let output = [...rawData];
 
@@ -46,12 +48,10 @@ function App() {
 
   return (
     <div className="app-container">
-      {/* ---------- TOTALS (computed from filtered+sorted data) ---------- */}
       <Totals data={filteredData} />
 
-      {/* ---------- TABLE ---------- */}
       <PaginatedTable
-        data={filteredData} // sorted + filtered data
+        data={filteredData}
         selectedRegion={selectedRegion}
         setSelectedRegion={setSelectedRegion}
         selectedChannel={selectedChannel}
@@ -59,6 +59,20 @@ function App() {
         sortConfig={sortConfig}
         setSortConfig={setSortConfig}
       />
+
+      <div className="insights-btn-container">
+        <button
+          className="insights-btn"
+          onClick={() => setShowChart((prev) => !prev)}>
+          {showChart ? "Hide Insights" : "Show Performance Insights"}
+        </button>
+      </div>
+
+      {showChart && (
+        <Suspense fallback={<div>Loading chart...</div>}>
+          <PerformanceInsights data={filteredData} />
+        </Suspense>
+      )}
     </div>
   );
 }

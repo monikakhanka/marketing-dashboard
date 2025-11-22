@@ -1,4 +1,3 @@
-// DataContext.js
 import { createContext, useContext, useMemo, useState } from "react";
 import rawData from "./data.json";
 
@@ -13,7 +12,6 @@ export function DataProvider({ children }) {
     order: "asc",
   });
 
-  /** ---------------- FILTER + SORT ---------------- */
   const filteredData = useMemo(() => {
     let output = [...rawData];
 
